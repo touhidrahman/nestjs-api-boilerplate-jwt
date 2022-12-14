@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { createTransport } from 'nodemailer';
-import * as Mail from 'nodemailer/lib/mailer';
-import { ConfigService } from '@nestjs/config';
-import * as hbs from 'nodemailer-express-handlebars';
+import { Injectable } from '@nestjs/common'
+import { createTransport } from 'nodemailer'
+import * as Mail from 'nodemailer/lib/mailer'
+import { ConfigService } from '@nestjs/config'
+import * as hbs from 'nodemailer-express-handlebars'
 
 @Injectable()
 export class MailerService {
-  private nodemailerTransport: Mail;
+  private nodemailerTransport: Mail
 
   constructor(private readonly configService: ConfigService) {
     this.nodemailerTransport = createTransport({
@@ -18,26 +18,19 @@ export class MailerService {
       },
       debug: this.configService.get<boolean>('EMAIL_DEBUG'),
       logger: true,
-    });
+    })
 
     const options = {
       viewEngine: {
         extname: '.hbs', // handlebars extension
-        layoutsDir:
-          process.cwd() +
-          `${this.configService.get<string>('EMAIL_LAYOUT_DIR')}`, // location of handlebars templates
-        defaultLayout: `${this.configService.get<string>(
-          'EMAIL_DEFAULT_LAYOUT',
-        )}`, // name of main template
-        partialsDir:
-          process.cwd() +
-          `${this.configService.get<string>('EMAIL_PARTIAL_DIR')}`, // location of your subtemplates aka. header, footer etc
+        layoutsDir: process.cwd() + `${this.configService.get<string>('EMAIL_LAYOUT_DIR')}`, // location of handlebars templates
+        defaultLayout: `${this.configService.get<string>('EMAIL_DEFAULT_LAYOUT')}`, // name of main template
+        partialsDir: process.cwd() + `${this.configService.get<string>('EMAIL_PARTIAL_DIR')}`, // location of your subtemplates aka. header, footer etc
       },
-      viewPath:
-        process.cwd() + `${this.configService.get<string>('EMAIL_VIEW_PATH')}`,
+      viewPath: process.cwd() + `${this.configService.get<string>('EMAIL_VIEW_PATH')}`,
       extName: '.hbs',
-    };
-    this.nodemailerTransport.use('compile', hbs(options));
+    }
+    this.nodemailerTransport.use('compile', hbs(options))
   }
 
   sendMail(options: any) {
@@ -45,8 +38,8 @@ export class MailerService {
     // temporarily bypassing the email sending
     const isEmailActive = this.configService.get<string>('EMAIL_AUTH_USER')
     if (!isEmailActive) {
-      return new Promise((resolve, reject) => {});
+      return new Promise((resolve, reject) => {})
     }
-    return this.nodemailerTransport.sendMail(options);
+    return this.nodemailerTransport.sendMail(options)
   }
 }

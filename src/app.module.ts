@@ -1,18 +1,18 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_PIPE } from '@nestjs/core';
-import { ThrottlerModule } from '@nestjs/throttler';
-import { ZodValidationPipe } from 'nestjs-zod';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ChangePasswordModule } from './change-password/change-password.module';
-import { ForgotPasswordModule } from './forgot-password/forgot-password.module';
-import { LoginModule } from './login/login.module';
-import { MailerModule } from './mailer/mailer.module';
-import { PrismaService } from './prisma.service';
-import { RegisterModule } from './register/register.module';
-import { UsersModule } from './users/users.module';
-import { UtilsModule } from './utils/utils.module';
+import { Module } from '@nestjs/common'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { APP_PIPE } from '@nestjs/core'
+import { ThrottlerModule } from '@nestjs/throttler'
+import { ZodValidationPipe } from 'nestjs-zod'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+import { ChangePasswordModule } from './change-password/change-password.module'
+import { ForgotPasswordModule } from './forgot-password/forgot-password.module'
+import { LoginModule } from './login/login.module'
+import { MailerModule } from './mailer/mailer.module'
+import { PrismaService } from './prisma.service'
+import { RegisterModule } from './register/register.module'
+import { UsersModule } from './users/users.module'
+import { UtilsModule } from './utils/utils.module'
 
 @Module({
   imports: [
@@ -43,7 +43,7 @@ import { UtilsModule } from './utils/utils.module';
       useClass: ZodValidationPipe,
     },
     AppService,
-    PrismaService
+    PrismaService,
   ],
 })
 export class AppModule {}

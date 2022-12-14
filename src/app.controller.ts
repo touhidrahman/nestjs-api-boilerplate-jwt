@@ -1,7 +1,7 @@
-import { Controller, Get, Res, HttpStatus, UseGuards } from '@nestjs/common';
-import { AppService } from './app.service';
-import { Response } from 'express';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Get, Res, HttpStatus, UseGuards } from '@nestjs/common'
+import { AppService } from './app.service'
+import { Response } from 'express'
+import { AuthGuard } from '@nestjs/passport'
 
 @Controller()
 export class AppController {
@@ -9,12 +9,12 @@ export class AppController {
 
   @Get()
   getHello(@Res() res: Response) {
-    return res.status(HttpStatus.OK).json(this.appService.getHello());
+    return res.status(HttpStatus.OK).json(this.appService.getHello())
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('secure')
   getProtectedResource(@Res() res: Response) {
-    return res.status(HttpStatus.OK).json(this.appService.getSecureResource());
+    return res.status(HttpStatus.OK).json(this.appService.getSecureResource())
   }
 }
