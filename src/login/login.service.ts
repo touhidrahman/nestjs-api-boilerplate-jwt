@@ -15,7 +15,7 @@ export class LoginService {
     return await this.usersService.findByEmail(loginDto.email)
   }
 
-  public async login(loginDto: LoginDto): Promise<any | { status: number; message: string }> {
+  public async login(loginDto: LoginDto): Promise<any | { statusCode: number; message: string }> {
     return this.validate(loginDto)
       .then((userData) => {
         if (!userData) {
@@ -27,7 +27,7 @@ export class LoginService {
         if (!passwordIsValid == true) {
           return {
             message: 'Authentication failed. Wrong password',
-            status: HttpStatus.BAD_REQUEST,
+            statusCode: HttpStatus.BAD_REQUEST,
           }
         }
 
@@ -43,7 +43,7 @@ export class LoginService {
           expiresIn: 3600,
           accessToken: accessToken,
           user: payload,
-          status: HttpStatus.OK,
+          statusCode: HttpStatus.OK,
         }
       })
       .catch((err) => {

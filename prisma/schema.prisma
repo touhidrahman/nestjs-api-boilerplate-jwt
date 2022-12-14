@@ -6,8 +6,8 @@ generator client {
 generator zod {
   provider          = "prisma-zod-generator"
   output            = "./generated-zod-schemas"
-  isGenerateSelect  = true
-  isGenerateInclude = true
+  isGenerateSelect  = false
+  isGenerateInclude = false
 }
 
 datasource db {
@@ -32,9 +32,27 @@ model User {
   gender           Gender?
   city             String?
   country          String?
+  role             UserRole  @default(USER)
+}
+
+enum UserRole {
+  ADMIN
+  MODERATOR
+  USER
 }
 
 enum Gender {
   Male
   Female
+}
+
+model FileAsset {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  url       String
+  size      Int
+  mimetype  String
+  bucket    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

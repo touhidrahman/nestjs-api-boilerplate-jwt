@@ -13,6 +13,7 @@ import { PrismaService } from './prisma.service'
 import { RegisterModule } from './register/register.module'
 import { UsersModule } from './users/users.module'
 import { UtilsModule } from './utils/utils.module'
+import { FileAssetModule } from './file-asset/file-asset.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { UtilsModule } from './utils/utils.module'
     ChangePasswordModule,
     MailerModule,
     UtilsModule,
+    FileAssetModule,
   ],
   controllers: [AppController],
   providers: [

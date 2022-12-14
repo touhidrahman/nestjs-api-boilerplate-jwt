@@ -1,7 +1,7 @@
-import { z } from 'zod';
-import { GenderSchema } from '../enums/Gender.schema';
+import { z } from 'zod'
+import { GenderSchema } from '../enums/Gender.schema'
 
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client'
 
 const Schema: z.ZodType<Prisma.NestedEnumGenderNullableFilter> = z
   .object({
@@ -20,14 +20,11 @@ const Schema: z.ZodType<Prisma.NestedEnumGenderNullableFilter> = z
       .optional()
       .nullable(),
     not: z
-      .union([
-        z.lazy(() => GenderSchema),
-        z.lazy(() => NestedEnumGenderNullableFilterObjectSchema),
-      ])
+      .union([z.lazy(() => GenderSchema), z.lazy(() => NestedEnumGenderNullableFilterObjectSchema)])
       .optional()
       .nullable(),
     isSet: z.boolean().optional(),
   })
-  .strict();
+  .strict()
 
-export const NestedEnumGenderNullableFilterObjectSchema = Schema;
+export const NestedEnumGenderNullableFilterObjectSchema = Schema

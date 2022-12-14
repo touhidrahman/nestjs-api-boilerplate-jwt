@@ -1,7 +1,8 @@
-import { z } from 'zod';
-import { GenderSchema } from '../enums/Gender.schema';
+import { z } from 'zod'
+import { GenderSchema } from '../enums/Gender.schema'
+import { UserRoleSchema } from '../enums/UserRole.schema'
 
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client'
 
 const Schema: z.ZodType<Prisma.UserCreateInput> = z
   .object({
@@ -24,7 +25,8 @@ const Schema: z.ZodType<Prisma.UserCreateInput> = z
       .nullable(),
     city: z.string().optional().nullable(),
     country: z.string().optional().nullable(),
+    role: z.lazy(() => UserRoleSchema).optional(),
   })
-  .strict();
+  .strict()
 
-export const UserCreateInputObjectSchema = Schema;
+export const UserCreateInputObjectSchema = Schema

@@ -1,7 +1,7 @@
-import { z } from 'zod';
-import { GenderSchema } from '../enums/Gender.schema';
+import { z } from 'zod'
+import { GenderSchema } from '../enums/Gender.schema'
 
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client'
 
 const Schema: z.ZodType<Prisma.NullableEnumGenderFieldUpdateOperationsInput> = z
   .object({
@@ -11,6 +11,6 @@ const Schema: z.ZodType<Prisma.NullableEnumGenderFieldUpdateOperationsInput> = z
       .nullable(),
     unset: z.boolean().optional(),
   })
-  .strict();
+  .strict()
 
-export const NullableEnumGenderFieldUpdateOperationsInputObjectSchema = Schema;
+export const NullableEnumGenderFieldUpdateOperationsInputObjectSchema = Schema

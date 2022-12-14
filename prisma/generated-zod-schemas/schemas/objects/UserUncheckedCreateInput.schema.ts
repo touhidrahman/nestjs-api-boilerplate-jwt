@@ -1,14 +1,14 @@
-import { z } from 'zod';
-import { GenderSchema } from '../enums/Gender.schema';
+import { z } from 'zod'
+import { GenderSchema } from '../enums/Gender.schema'
+import { UserRoleSchema } from '../enums/UserRole.schema'
 
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client'
 
 const Schema: z.ZodType<Prisma.UserUncheckedCreateInput> = z
   .object({
     id: z.string().optional(),
     createdAt: z.date().optional(),
     updatedAt: z.date().optional(),
-    username: z.string(),
     email: z.string(),
     password: z.string(),
     firstName: z.string(),
@@ -25,7 +25,8 @@ const Schema: z.ZodType<Prisma.UserUncheckedCreateInput> = z
       .nullable(),
     city: z.string().optional().nullable(),
     country: z.string().optional().nullable(),
+    role: z.lazy(() => UserRoleSchema).optional(),
   })
-  .strict();
+  .strict()
 
-export const UserUncheckedCreateInputObjectSchema = Schema;
+export const UserUncheckedCreateInputObjectSchema = Schema

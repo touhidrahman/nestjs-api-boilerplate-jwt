@@ -1,10 +1,10 @@
-import { z } from 'zod';
-import { QueryModeSchema } from '../enums/QueryMode.schema';
-import { NestedStringNullableWithAggregatesFilterObjectSchema } from './NestedStringNullableWithAggregatesFilter.schema';
-import { NestedIntNullableFilterObjectSchema } from './NestedIntNullableFilter.schema';
-import { NestedStringNullableFilterObjectSchema } from './NestedStringNullableFilter.schema';
+import { z } from 'zod'
+import { QueryModeSchema } from '../enums/QueryMode.schema'
+import { NestedStringNullableWithAggregatesFilterObjectSchema } from './NestedStringNullableWithAggregatesFilter.schema'
+import { NestedIntNullableFilterObjectSchema } from './NestedIntNullableFilter.schema'
+import { NestedStringNullableFilterObjectSchema } from './NestedStringNullableFilter.schema'
 
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client'
 
 const Schema: z.ZodType<Prisma.StringNullableWithAggregatesFilter> = z
   .object({
@@ -20,10 +20,7 @@ const Schema: z.ZodType<Prisma.StringNullableWithAggregatesFilter> = z
     endsWith: z.string().optional(),
     mode: z.lazy(() => QueryModeSchema).optional(),
     not: z
-      .union([
-        z.string(),
-        z.lazy(() => NestedStringNullableWithAggregatesFilterObjectSchema),
-      ])
+      .union([z.string(), z.lazy(() => NestedStringNullableWithAggregatesFilterObjectSchema)])
       .optional()
       .nullable(),
     _count: z.lazy(() => NestedIntNullableFilterObjectSchema).optional(),
@@ -31,6 +28,6 @@ const Schema: z.ZodType<Prisma.StringNullableWithAggregatesFilter> = z
     _max: z.lazy(() => NestedStringNullableFilterObjectSchema).optional(),
     isSet: z.boolean().optional(),
   })
-  .strict();
+  .strict()
 
-export const StringNullableWithAggregatesFilterObjectSchema = Schema;
+export const StringNullableWithAggregatesFilterObjectSchema = Schema
