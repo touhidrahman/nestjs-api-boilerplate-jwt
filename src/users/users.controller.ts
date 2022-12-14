@@ -23,7 +23,7 @@ export class UsersController {
     const user = await this.usersService.findById(userId)
 
     return {
-      data: { ...user, password: '' },
+      data: this.getSafeUser(user),
       statusCode: HttpStatus.OK,
     }
   }
@@ -37,7 +37,7 @@ export class UsersController {
     }
 
     return {
-      data: user,
+      data: this.getSafeUser(user),
       statusCode: HttpStatus.OK,
     }
   }
@@ -46,14 +46,14 @@ export class UsersController {
   public async updateProfileUser(
     @Param('userId') userId: string,
     @Body() userProfileDto: UserProfileDto,
-  ): Promise<EntityResponse<null>> {
+  ): Promise<EntityResponse<User | null>> {
     try {
-      await this.usersService.updateProfileUser(userId, userProfileDto)
+      const user = await this.usersService.updateProfileUser(userId, userProfileDto)
 
       return {
         message: 'User Updated successfully!',
         statusCode: HttpStatus.OK,
-        data: null,
+        data: this.getSafeUser(user),
       }
     } catch (err: any) {
       return {
@@ -68,14 +68,14 @@ export class UsersController {
   public async updateUser(
     @Param('userId') userId: string,
     @Body() userUpdateDto: UserUpdateDto,
-  ): Promise<EntityResponse<null>> {
+  ): Promise<EntityResponse<User | null>> {
     try {
-      await this.usersService.updateUser(userId, userUpdateDto)
+      const user = await this.usersService.updateUser(userId, userUpdateDto)
 
       return {
         message: 'User Updated successfully!',
         statusCode: HttpStatus.OK,
-        data: null,
+        data: this.getSafeUser(user),
       }
     } catch (err) {
       return {
@@ -97,5 +97,9 @@ export class UsersController {
       statusCode: HttpStatus.OK,
       data: user,
     }
+  }
+
+  private getSafeUser(user: User): User {
+    return { ...user, password: ''}
   }
 }
