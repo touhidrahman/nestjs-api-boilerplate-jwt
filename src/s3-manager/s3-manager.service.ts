@@ -20,7 +20,7 @@ export class S3ManagerService {
     const filename = folder + '/' + random + '_' + String(originalname)
 
     const result = this.s3
-      .putObject({
+      .upload({
         Bucket: this.bucketName,
         Key: filename,
         Body: buffer,
@@ -30,10 +30,11 @@ export class S3ManagerService {
       })
       .promise()
 
-      this.s3.getObject({ Bucket: this.bucketName, Key: filename }, (err, data) => {
-        console.log(data)
-      })
+    return result
+  }
 
+  async deleteFile(key: string) {
+    const result = this.s3.deleteObject({ Bucket: this.bucketName, Key: key }).promise()
     return result
   }
 }

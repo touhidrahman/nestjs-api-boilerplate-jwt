@@ -48,3 +48,12 @@ Authorization: Bearer {{accessToken}}
 ############################ FILE ASSET ############################
 
 GET {{host}}/file-assets
+
+###
+
+POST {{host}}/file-assets/delete-by-url
+Content-Type: application/json
+
+{
+    "url": "https://mak-dev-test.s3.eu-central-1.amazonaws.com/nestjs-prisma-starter/dn2l16_c86.png"
+}
