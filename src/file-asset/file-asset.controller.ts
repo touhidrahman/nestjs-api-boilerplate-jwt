@@ -1,5 +1,5 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
-import { FileInterceptor } from '@nestjs/platform-express'
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common'
+import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express'
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
 import { FileAsset } from '@prisma/client'
 import { EntityResponse } from 'src/interface'
@@ -43,10 +43,54 @@ export class FileAssetController {
     }
   }
 
-  @Post('delete-by-url')
-  async deleteAsset(@Body() data: { url: string }): Promise<EntityResponse<FileAsset>> {
+  @Post('uploads')
+  @UseInterceptors(FilesInterceptor('files')) // 👈  using FilesInterceptor here
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array', // 👈  array of files
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+      },
+    },
+  })
+  async uploadAssets(@UploadedFiles() files: Array<Express.Multer.File>) {
     try {
-      const result = await this.fileAssetService.delete(data.url)
+      const result = await this.fileAssetService.uploadFiles(files, 'nestjs-prisma-starter')
+      return {
+        data: result,
+        statusCode: HttpStatus.CREATED,
+        message: 'Files uploaded successfully',
+      }
+    } catch (error: any) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  @Delete(':assetId')
+  async deleteAsset(@Param('asssetId') assetId: string): Promise<EntityResponse<FileAsset>> {
+    try {
+      const result = await this.fileAssetService.delete(assetId)
+      return {
+        data: result,
+        statusCode: HttpStatus.OK,
+        message: 'File deleted successfully',
+      }
+    } catch (error: any) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  @Post('delete-by-url')
+  async deleteAssetByUrl(@Body() data: { url: string }): Promise<EntityResponse<FileAsset>> {
+    try {
+      const result = await this.fileAssetService.deleteByUrl(data.url)
       return {
         data: result,
         statusCode: HttpStatus.OK,
