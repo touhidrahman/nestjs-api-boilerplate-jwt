@@ -43,3 +43,8 @@ Authorization: Bearer {{accessToken}}
     "firstName": "John1",
     "lastName": "Doe1"
 }
+
+
+############################ FILE ASSET ############################
+
+GET {{host}}/file-assets

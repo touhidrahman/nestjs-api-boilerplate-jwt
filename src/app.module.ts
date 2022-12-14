@@ -13,7 +13,11 @@ import { PrismaService } from './prisma.service'
 import { RegisterModule } from './register/register.module'
 import { UsersModule } from './users/users.module'
 import { UtilsModule } from './utils/utils.module'
-import { FileAssetModule } from './file-asset/file-asset.module';
+import { FileAssetModule } from './file-asset/file-asset.module'
+import { AwsSdkModule } from 'nest-aws-sdk'
+import { SharedIniFileCredentials, S3 } from 'aws-sdk'
+import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
+import { S3ManagerModule } from './s3-manager/s3-manager.module'
 
 @Module({
   imports: [
@@ -29,6 +33,19 @@ import { FileAssetModule } from './file-asset/file-asset.module';
         limit: config.get<number>('THROTTLE_LIMIT'),
       }),
     }),
+    AwsSdkModule.forRootAsync({
+      defaultServiceOptions: {
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (config: ConfigService): ServiceConfigurationOptions => ({
+          region: config.get<string>('AWS_DEFAULT_REGION'),
+          credentials: {
+            accessKeyId: config.get<string>('AWS_ACCESS_KEY_ID') ?? '',
+            secretAccessKey: config.get<string>('AWS_SECRET_ACCESS_KEY') ?? '',
+          },
+        }),
+      },
+    }),
     LoginModule,
     RegisterModule,
     UsersModule,
@@ -37,6 +54,7 @@ import { FileAssetModule } from './file-asset/file-asset.module';
     MailerModule,
     UtilsModule,
     FileAssetModule,
+    S3ManagerModule,
   ],
   controllers: [AppController],
   providers: [
