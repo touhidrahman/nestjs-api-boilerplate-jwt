@@ -10,6 +10,7 @@ const Schema: z.ZodType<Prisma.UserUncheckedCreateInput> = z
     updatedAt: z.date().optional(),
     username: z.string(),
     email: z.string(),
+    password: z.string(),
     firstName: z.string(),
     lastName: z.string(),
     image: z.string().optional().nullable(),

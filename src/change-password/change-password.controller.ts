@@ -19,21 +19,21 @@ export class ChangePasswordController {
 
   @Post()
   public async changePassword(
-    @Res() res,
     @Body() changePasswordDto: ChangePasswordDto,
   ): Promise<any> {
     try {
       await this.changePasswordService.changePassword(changePasswordDto);
 
-      return res.status(HttpStatus.OK).json({
+      return {
         message: 'Request Change Password Successfully!',
-        status: 200,
-      });
+        status: HttpStatus.OK,
+      };
     } catch (err) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
+      return {
         message: 'Error: Change password failed!',
-        status: 400,
-      });
+        status: HttpStatus.BAD_REQUEST,
+        error: true,
+      };
     }
   }
 }

@@ -1,17 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from '../users/entities/users.entity';
-import { ForgotPasswordDto } from './dto/forgot-password.dto';
-import { MailerService } from '../mailer/mailer.service';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { PrismaService } from 'src/prisma.service';
+import { UsersService } from 'src/users/users.service';
+import { MailerService } from '../mailer/mailer.service';
 import { UtilsService } from '../utils/utils.service';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 
 @Injectable()
 export class ForgotPasswordService {
   constructor(
-    @InjectRepository(Users)
-    private readonly userRepository: Repository<Users>,
+    private readonly prisma: PrismaService,
     private readonly mailerService: MailerService,
     private readonly utilsService: UtilsService,
   ) {}
@@ -19,18 +17,24 @@ export class ForgotPasswordService {
   public async forgotPassword(
     forgotPasswordDto: ForgotPasswordDto,
   ): Promise<any> {
-    const userUpdate = await this.userRepository.findOneBy({
-      email: forgotPasswordDto.email,
+    const userUpdate = await this.prisma.user.findFirst({
+      where: { email: forgotPasswordDto.email },
     });
+    if (!userUpdate) {
+      throw new NotFoundException(`User ${forgotPasswordDto.email} not found`);
+    }
     const passwordRand = this.utilsService.generatePassword();
-    userUpdate.password = bcrypt.hashSync(passwordRand, 8);
+    const password = bcrypt.hashSync(passwordRand, 8);
 
     this.sendMailForgotPassword(userUpdate.email, passwordRand);
 
-    return await this.userRepository.save(userUpdate);
+    return await this.prisma.user.update({
+      where: { id: userUpdate.id },
+      data: { password },
+    });
   }
 
-  private sendMailForgotPassword(email, password): void {
+  private sendMailForgotPassword(email: string, password: string): void {
     this.mailerService
       .sendMail({
         to: email,

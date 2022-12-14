@@ -9,6 +9,7 @@ const Schema: z.ZodType<Prisma.UserSelect> = z
     updatedAt: z.boolean().optional(),
     username: z.boolean().optional(),
     email: z.boolean().optional(),
+    password: z.boolean().optional(),
     firstName: z.boolean().optional(),
     lastName: z.boolean().optional(),
     image: z.boolean().optional(),

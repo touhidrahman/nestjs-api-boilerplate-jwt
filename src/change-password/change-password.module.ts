@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
+import { PrismaService } from 'src/prisma.service';
+import { MailerModule } from '../mailer/mailer.module';
+import { UsersService } from '../users/users.service';
 import { ChangePasswordController } from './change-password.controller';
 import { ChangePasswordService } from './change-password.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Users } from '../users/entities/users.entity';
-import { UsersService } from '../users/users.service';
-import { MailerModule } from '../mailer/mailer.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Users]), MailerModule],
+  imports: [MailerModule],
   controllers: [ChangePasswordController],
-  providers: [ChangePasswordService, UsersService],
+  providers: [PrismaService, ChangePasswordService, UsersService],
 })
 export class ChangePasswordModule {}

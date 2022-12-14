@@ -1,0 +1,44 @@
+@host=http://127.0.0.1:3000/api
+@userId=63999b19f2fff88e12b3cbd1
+@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obkRvZSIsImVtYWlsIjoiYTFAYi5jb20iLCJpZCI6IjYzOTk5YjE5ZjJmZmY4OGUxMmIzY2JkMSIsImlhdCI6MTY3MTAxMTgyOCwiZXhwIjoxNjcxMDE1NDI4fQ.1oiXZuSGx63HfXeDM-OcN_D1H1dqWzkK1TgaaPetKvc
+
+
+
+############################ AUTH ############################
+
+POST {{host}}/auth/register
+Content-Type: application/json
+
+{
+    "email": "a1@b.com",
+    "firstName": "John",
+    "lastName": "Doe",
+    "password": "Abcd1234!"
+}
+
+###
+
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "a1@b.com",
+    "password": "Abcd1234!"
+}
+
+
+############################ USER ############################
+
+GET {{host}}/users/{{userId}}
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+###
+
+PUT {{host}}/users/{{userId}}/profile
+Content-Type: application/json
+
+{
+    "email": "a1@b.com",
+    "password": "Abcd1234!"
+}

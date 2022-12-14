@@ -2,6 +2,8 @@ import { Controller, Post, Body, Res, HttpStatus } from '@nestjs/common';
 import { RegisterService } from './register.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { EntityResponse } from 'src/interface';
+import { User } from '@prisma/client';
 
 @ApiTags('auth')
 @Controller('auth/register')
@@ -10,21 +12,22 @@ export class RegisterController {
 
   @Post()
   public async register(
-    @Res() res,
     @Body() registerUserDto: RegisterUserDto,
-  ): Promise<any> {
+  ): Promise<EntityResponse<User | null>> {
     try {
-      await this.registerService.register(registerUserDto);
+      const result = await this.registerService.register(registerUserDto);
 
-      return res.status(HttpStatus.OK).json({
-        message: 'User registration successfully!',
-        status: 200,
-      });
-    } catch (err) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
-        message: 'Error: User not registration!',
-        status: 400,
-      });
+      return {
+        message: 'User registration was successful',
+        statusCode: HttpStatus.CREATED,
+        data: result,
+      };
+    } catch (err: any) {
+      return {
+        message: 'Error: User registration not successful!',
+        statusCode: HttpStatus.BAD_REQUEST,
+        data: null,
+      };
     }
   }
 }

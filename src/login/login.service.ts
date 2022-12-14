@@ -2,14 +2,15 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  UnauthorizedException,
+  UnauthorizedException
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../users/users.service';
-import { IUsers } from '../users/interfaces/users.interface';
+import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { JwtPayload } from './interfaces/jwt.payload';
+import { UserDto } from 'src/users/dto/user.dto';
+import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
+import { JwtPayload } from './interfaces/jwt.payload';
 
 @Injectable()
 export class LoginService {
@@ -18,7 +19,7 @@ export class LoginService {
     private readonly jwtService: JwtService,
   ) {}
 
-  private async validate(loginDto: LoginDto): Promise<IUsers> {
+  private async validate(loginDto: LoginDto): Promise<User> {
     return await this.usersService.findByEmail(loginDto.email);
   }
 
@@ -39,12 +40,12 @@ export class LoginService {
         if (!passwordIsValid == true) {
           return {
             message: 'Authentication failed. Wrong password',
-            status: 400,
+            status: HttpStatus.BAD_REQUEST,
           };
         }
 
         const payload = {
-          name: userData.name,
+          name: userData.firstName + '' + userData.lastName,
           email: userData.email,
           id: userData.id,
         };
@@ -55,7 +56,7 @@ export class LoginService {
           expiresIn: 3600,
           accessToken: accessToken,
           user: payload,
-          status: 200,
+          status: HttpStatus.OK,
         };
       })
       .catch((err) => {
@@ -73,9 +74,10 @@ export class LoginService {
     return this.createJwtPayload(user);
   }
 
-  protected createJwtPayload(user) {
+  protected createJwtPayload(user: Partial<UserDto>) {
     const data: JwtPayload = {
-      email: user.email,
+      email: user.email ?? '',
+      id: user.id ?? ''
     };
 
     const jwt = this.jwtService.sign(data);

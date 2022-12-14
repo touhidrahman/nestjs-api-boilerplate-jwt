@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { RegisterUserDto } from './dto/register-user.dto';
-import { IUsers } from './../users/interfaces/users.interface';
+import { UserDto } from 'src/users/dto/user.dto';
 import { MailerService } from '../mailer/mailer.service';
+import { UsersService } from '../users/users.service';
+import { RegisterUserDto } from './dto/register-user.dto';
 
 @Injectable()
 export class RegisterService {
@@ -12,7 +13,7 @@ export class RegisterService {
     private readonly mailerService: MailerService,
   ) {}
 
-  public async register(registerUserDto: RegisterUserDto): Promise<IUsers> {
+  public async register(registerUserDto: RegisterUserDto): Promise<User> {
     registerUserDto.password = bcrypt.hashSync(registerUserDto.password, 8);
 
     this.sendMailRegisterUser(registerUserDto);
@@ -20,7 +21,7 @@ export class RegisterService {
     return this.usersService.create(registerUserDto);
   }
 
-  private sendMailRegisterUser(user): void {
+  private sendMailRegisterUser(user: UserDto): void {
     this.mailerService
       .sendMail({
         to: user.email,
@@ -32,7 +33,7 @@ export class RegisterService {
           title: 'Registration successfully',
           description:
             "You did it! You registered!, You're successfully registered.✔",
-          nameUser: user.name,
+          nameUser: user.firstName + ' ' + user.lastName,
         },
       })
       .then((response) => {

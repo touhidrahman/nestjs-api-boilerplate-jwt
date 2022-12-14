@@ -9,6 +9,7 @@ const Schema: z.ZodType<Prisma.UserMinAggregateInputType> = z
     updatedAt: z.literal(true).optional(),
     username: z.literal(true).optional(),
     email: z.literal(true).optional(),
+    password: z.literal(true).optional(),
     firstName: z.literal(true).optional(),
     lastName: z.literal(true).optional(),
     image: z.literal(true).optional(),

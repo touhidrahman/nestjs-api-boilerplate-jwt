@@ -1,21 +1,14 @@
 import {
-  Controller,
-  Put,
-  Get,
-  Body,
-  Res,
-  Param,
-  UseGuards,
-  HttpStatus,
-  NotFoundException,
-  Delete,
+  Body, Controller, Delete, Get, HttpStatus,
+  NotFoundException, Param, Put, UseGuards
 } from '@nestjs/common';
-import { UsersService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
+import { User } from '@prisma/client';
+import { EntityResponse } from 'src/interface';
 import { UserProfileDto } from './dto/user-profile.dto';
 import { UserUpdateDto } from './dto/user-update.dto';
-import { IUsers } from './interfaces/users.interface';
-import { ApiTags } from '@nestjs/swagger';
+import { UsersService } from './users.service';
 
 @ApiTags('users')
 @UseGuards(AuthGuard('jwt'))
@@ -24,80 +17,90 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  public async findAllUser(): Promise<IUsers[]> {
+  public async findAllUser(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
   @Get('/:userId')
-  public async findOneUser(@Param('userId') userId: string): Promise<IUsers> {
-    return this.usersService.findById(userId);
+  public async findOneUser(@Param('userId') userId: string): Promise<EntityResponse<User>> {
+    const user = await this.usersService.findById(userId);
+
+    return {
+      data: { ...user, password: '' },
+      statusCode: HttpStatus.OK,
+    }
   }
 
   @Get('/:userId/profile')
   public async getUser(
-    @Res() res,
     @Param('userId') userId: string,
-  ): Promise<IUsers> {
+  ): Promise<EntityResponse<User>> {
     const user = await this.usersService.findById(userId);
 
     if (!user) {
       throw new NotFoundException('User does not exist!');
     }
 
-    return res.status(HttpStatus.OK).json({
-      user: user,
-      status: 200,
-    });
+    return {
+      data: user,
+      statusCode: HttpStatus.OK,
+    };
   }
 
   @Put('/:userId/profile')
   public async updateProfileUser(
-    @Res() res,
     @Param('userId') userId: string,
     @Body() userProfileDto: UserProfileDto,
-  ): Promise<any> {
+  ): Promise<EntityResponse<null>> {
     try {
       await this.usersService.updateProfileUser(userId, userProfileDto);
 
-      return res.status(HttpStatus.OK).json({
+      return {
         message: 'User Updated successfully!',
-        status: 200,
-      });
-    } catch (err) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
+        statusCode: HttpStatus.OK,
+        data: null,
+      };
+    } catch (err: any) {
+      return {
         message: 'Error: User not updated!',
-        status: 400,
-      });
+        statusCode: HttpStatus.BAD_REQUEST,
+        data: null,
+      };
     }
   }
 
   @Put('/:userId')
   public async updateUser(
-    @Res() res,
     @Param('userId') userId: string,
     @Body() userUpdateDto: UserUpdateDto,
-  ) {
+  ): Promise<EntityResponse<null>> {
     try {
       await this.usersService.updateUser(userId, userUpdateDto);
 
-      return res.status(HttpStatus.OK).json({
+      return {
         message: 'User Updated successfully!',
-        status: 200,
-      });
+        statusCode: HttpStatus.OK,
+        data: null,
+      }
     } catch (err) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
+      return {
         message: 'Error: User not updated!',
-        status: 400,
-      });
+        statusCode: HttpStatus.BAD_REQUEST,
+        data: null,
+      };
     }
   }
 
   @Delete('/:userId')
-  public async deleteUser(@Param('userId') userId: string): Promise<void> {
-    const user = this.usersService.deleteUser(userId);
+  public async deleteUser(@Param('userId') userId: string): Promise<EntityResponse<User>> {
+    const user = await this.usersService.deleteUser(userId);
     if (!user) {
       throw new NotFoundException('User does not exist!');
     }
-    return user;
+    return {
+      message: 'User has been deleted',
+      statusCode: HttpStatus.OK,
+      data: user,
+    };
   }
 }

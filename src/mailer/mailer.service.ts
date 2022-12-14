@@ -41,6 +41,12 @@ export class MailerService {
   }
 
   sendMail(options: any) {
+    // TODO remove
+    // temporarily bypassing the email sending
+    const isEmailActive = this.configService.get<string>('EMAIL_AUTH_USER')
+    if (!isEmailActive) {
+      return new Promise((resolve, reject) => {});
+    }
     return this.nodemailerTransport.sendMail(options);
   }
 }
