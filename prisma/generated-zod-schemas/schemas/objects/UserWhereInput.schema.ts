@@ -39,7 +39,6 @@ const Schema: z.ZodType<Prisma.UserWhereInput> = z
       .union([z.lazy(() => DateTimeNullableFilterObjectSchema), z.date()])
       .optional()
       .nullable(),
-    registrationDate: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.date()]).optional(),
     disabled: z.union([z.lazy(() => BoolFilterObjectSchema), z.boolean()]).optional(),
     bio: z
       .union([z.lazy(() => StringNullableFilterObjectSchema), z.string()])

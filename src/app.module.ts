@@ -2,22 +2,22 @@ import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { APP_PIPE } from '@nestjs/core'
 import { ThrottlerModule } from '@nestjs/throttler'
+import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
+import { AwsSdkModule } from 'nest-aws-sdk'
+import { loggingMiddleware, PrismaModule } from 'nestjs-prisma'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
+import { dbLoggingMiddleware } from './app/middlewares/db-logging.middleware'
 import { ChangePasswordModule } from './change-password/change-password.module'
+import { FileAssetModule } from './file-asset/file-asset.module'
 import { ForgotPasswordModule } from './forgot-password/forgot-password.module'
 import { LoginModule } from './login/login.module'
 import { MailerModule } from './mailer/mailer.module'
-import { PrismaService } from './prisma.service'
 import { RegisterModule } from './register/register.module'
+import { S3ManagerModule } from './s3-manager/s3-manager.module'
 import { UsersModule } from './users/users.module'
 import { UtilsModule } from './utils/utils.module'
-import { FileAssetModule } from './file-asset/file-asset.module'
-import { AwsSdkModule } from 'nest-aws-sdk'
-import { SharedIniFileCredentials, S3 } from 'aws-sdk'
-import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
-import { S3ManagerModule } from './s3-manager/s3-manager.module'
 
 @Module({
   imports: [
@@ -31,6 +31,18 @@ import { S3ManagerModule } from './s3-manager/s3-manager.module'
       useFactory: (config: ConfigService) => ({
         ttl: config.get<number>('THROTTLE_TTL'),
         limit: config.get<number>('THROTTLE_LIMIT'),
+      }),
+    }),
+    PrismaModule.forRootAsync({
+      isGlobal: true,
+      useFactory: () => ({
+        prismaOptions: {
+          log: ['warn', 'error', 'info', 'query'],
+        },
+        prismaServiceOptions: {
+          middlewares: [loggingMiddleware()],
+        },
+        explicitConnect: false,
       }),
     }),
     AwsSdkModule.forRootAsync({
@@ -63,7 +75,6 @@ import { S3ManagerModule } from './s3-manager/s3-manager.module'
       useClass: ZodValidationPipe,
     },
     AppService,
-    PrismaService,
   ],
 })
 export class AppModule {}

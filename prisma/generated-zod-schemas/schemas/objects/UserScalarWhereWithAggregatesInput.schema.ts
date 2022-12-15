@@ -45,7 +45,6 @@ const Schema: z.ZodType<Prisma.UserScalarWhereWithAggregatesInput> = z
       .union([z.lazy(() => DateTimeNullableWithAggregatesFilterObjectSchema), z.date()])
       .optional()
       .nullable(),
-    registrationDate: z.union([z.lazy(() => DateTimeWithAggregatesFilterObjectSchema), z.date()]).optional(),
     disabled: z.union([z.lazy(() => BoolWithAggregatesFilterObjectSchema), z.boolean()]).optional(),
     bio: z
       .union([z.lazy(() => StringNullableWithAggregatesFilterObjectSchema), z.string()])

@@ -16,7 +16,6 @@ const Schema: z.ZodType<Prisma.UserUncheckedCreateInput> = z
     image: z.string().optional().nullable(),
     emailVerified: z.boolean().optional(),
     birthDate: z.date().optional().nullable(),
-    registrationDate: z.date().optional(),
     disabled: z.boolean().optional(),
     bio: z.string().optional().nullable(),
     gender: z

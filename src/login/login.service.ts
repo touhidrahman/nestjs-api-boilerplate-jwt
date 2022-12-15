@@ -32,7 +32,7 @@ export class LoginService {
         }
 
         const payload = {
-          name: userData.firstName + '' + userData.lastName,
+          name: userData.firstName + ' ' + userData.lastName,
           email: userData.email,
           id: userData.id,
         }

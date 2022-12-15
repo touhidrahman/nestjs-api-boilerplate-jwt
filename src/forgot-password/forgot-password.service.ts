@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
-import { PrismaService } from 'src/prisma.service'
+import { PrismaService } from 'nestjs-prisma'
 import { UsersService } from 'src/users/users.service'
 import { MailerService } from '../mailer/mailer.service'
 import { UtilsService } from '../utils/utils.service'

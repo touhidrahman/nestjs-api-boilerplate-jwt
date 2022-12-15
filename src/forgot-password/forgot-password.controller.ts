@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Res, HttpStatus } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { EntityResponse } from 'src/interface'
+import { EntityResponse } from 'src/app/interface'
 import { ForgotPasswordService } from '../forgot-password/forgot-password.service'
 import { ForgotPasswordDto } from './dto/forgot-password.dto'
 

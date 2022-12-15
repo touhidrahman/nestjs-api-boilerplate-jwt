@@ -2,7 +2,7 @@ import { Controller, Post, Body, Res, HttpStatus } from '@nestjs/common'
 import { RegisterService } from './register.service'
 import { RegisterUserDto } from './dto/register-user.dto'
 import { ApiTags } from '@nestjs/swagger'
-import { EntityResponse } from 'src/interface'
+import { EntityResponse } from 'src/app/interface'
 import { User } from '@prisma/client'
 
 @ApiTags('auth')

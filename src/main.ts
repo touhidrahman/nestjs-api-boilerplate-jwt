@@ -1,18 +1,22 @@
-import { NestFactory } from '@nestjs/core'
-import { AppModule } from './app.module'
-import { Logger, ValidationPipe } from '@nestjs/common'
+import { Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { configureSwaggerDocs } from './helpers/configure-swagger-docs.helper'
-import { PrismaService } from './prisma.service'
+import { HttpAdapterHost, NestFactory } from '@nestjs/core'
+import { PrismaClientExceptionFilter, PrismaService } from 'nestjs-prisma'
+import { AppModule } from './app.module'
+import { configureSwaggerDocs } from './app/helpers/configure-swagger-docs.helper'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const configService = app.get<ConfigService>(ConfigService)
 
-  const prismaService = app.get(PrismaService)
+  // enable shutdown hook. Handle Prisma shutdown signal to shutdown your Nest application.
+  const prismaService: PrismaService = app.get(PrismaService)
   await prismaService.enableShutdownHooks(app)
 
   app.setGlobalPrefix('api')
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   configureSwaggerDocs(app, configService)
 

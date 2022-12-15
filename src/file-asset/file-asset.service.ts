@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common'
 import { FileAsset } from '@prisma/client'
-import { PrismaService } from 'src/prisma.service'
+import { PrismaService } from 'nestjs-prisma'
 import { S3ManagerService } from 'src/s3-manager/s3-manager.service'
 
 @Injectable()

@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpStatus, NotFoundException, Param, Pu
 import { AuthGuard } from '@nestjs/passport'
 import { ApiTags } from '@nestjs/swagger'
 import { User } from '@prisma/client'
-import { EntityResponse } from 'src/interface'
+import { EntityResponse } from 'src/app/interface'
 import { UserProfileDto } from './dto/user-profile.dto'
 import { UserUpdateDto } from './dto/user-update.dto'
 import { UsersService } from './users.service'

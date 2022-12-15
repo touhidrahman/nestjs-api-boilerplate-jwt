@@ -26,7 +26,6 @@ model User {
   image            String?
   emailVerified    Boolean   @default(false)
   birthDate        DateTime? @db.Date
-  registrationDate DateTime  @default(now())
   disabled         Boolean   @default(false)
   bio              String?
   gender           Gender?

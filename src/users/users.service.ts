@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common'
 import { Prisma, User } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
-import { PrismaService } from 'src/prisma.service'
+import { PrismaService } from 'nestjs-prisma'
 import { UserProfileDto } from './dto/user-profile.dto'
 import { UserUpdateDto } from './dto/user-update.dto'
 

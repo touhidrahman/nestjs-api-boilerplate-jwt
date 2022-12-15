@@ -28,7 +28,6 @@ const Schema: z.ZodType<Prisma.UserUncheckedUpdateManyInput> = z
       .union([z.date(), z.lazy(() => NullableDateTimeFieldUpdateOperationsInputObjectSchema)])
       .optional()
       .nullable(),
-    registrationDate: z.union([z.date(), z.lazy(() => DateTimeFieldUpdateOperationsInputObjectSchema)]).optional(),
     disabled: z.union([z.boolean(), z.lazy(() => BoolFieldUpdateOperationsInputObjectSchema)]).optional(),
     bio: z
       .union([z.string(), z.lazy(() => NullableStringFieldUpdateOperationsInputObjectSchema)])

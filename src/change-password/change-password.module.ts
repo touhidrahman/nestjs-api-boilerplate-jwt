@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common'
-import { PrismaService } from 'src/prisma.service'
+import { PrismaModule } from 'nestjs-prisma'
 import { MailerModule } from '../mailer/mailer.module'
 import { UsersService } from '../users/users.service'
 import { ChangePasswordController } from './change-password.controller'
 import { ChangePasswordService } from './change-password.service'
 
 @Module({
-  imports: [MailerModule],
+  imports: [MailerModule, PrismaModule],
   controllers: [ChangePasswordController],
-  providers: [PrismaService, ChangePasswordService, UsersService],
+  providers: [ChangePasswordService, UsersService],
 })
 export class ChangePasswordModule {}
