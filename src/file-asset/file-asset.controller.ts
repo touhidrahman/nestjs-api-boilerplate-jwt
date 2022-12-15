@@ -1,9 +1,13 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common'
-import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express'
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, UploadedFile, UploadedFiles } from '@nestjs/common'
+import { ApiConsumes, ApiTags } from '@nestjs/swagger'
 import { FileAsset } from '@prisma/client'
+import { ApiFile, ApiImageFile } from 'src/app/api-file.decorator'
+import { ApiFiles } from 'src/app/api-files.decorator'
+import { ParseFile } from 'src/app/parse-file.pipe'
+import { APP_NAME } from 'src/app/values/app-name'
 import { EntityResponse } from 'src/interface'
 import { FileAssetService } from './file-asset.service'
+import { snake } from 'radash'
 
 @ApiTags('file-assets')
 @Controller('file-assets')
@@ -15,24 +19,28 @@ export class FileAssetController {
     return this.fileAssetService.listAllContent()
   }
 
-  @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
+  @Post('avatar')
   @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          // 👈 this property
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
-  async uploadAsset(@UploadedFile() file: Express.Multer.File): Promise<EntityResponse<FileAsset | null>> {
+  @ApiImageFile('avatar', true)
+  async uploadAvatar(@UploadedFile(ParseFile) file: Express.Multer.File): Promise<EntityResponse<FileAsset | null>> {
     try {
-      const result = await this.fileAssetService.uploadFile(file, 'nestjs-prisma-starter')
+      const result = await this.fileAssetService.uploadFile(file, `${snake(APP_NAME)}/avatars`)
+      return {
+        data: result,
+        statusCode: HttpStatus.CREATED,
+        message: 'File uploaded successfully',
+      }
+    } catch (error: any) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  @Post('upload')
+  @ApiConsumes('multipart/form-data')
+  @ApiFile('file')
+  async uploadAsset(@UploadedFile(ParseFile) file: Express.Multer.File): Promise<EntityResponse<FileAsset | null>> {
+    try {
+      const result = await this.fileAssetService.uploadFile(file, `${snake(APP_NAME)}/public`)
       return {
         data: result,
         statusCode: HttpStatus.CREATED,
@@ -44,25 +52,11 @@ export class FileAssetController {
   }
 
   @Post('uploads')
-  @UseInterceptors(FilesInterceptor('files')) // 👈  using FilesInterceptor here
   @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        files: {
-          type: 'array', // 👈  array of files
-          items: {
-            type: 'string',
-            format: 'binary',
-          },
-        },
-      },
-    },
-  })
-  async uploadAssets(@UploadedFiles() files: Array<Express.Multer.File>) {
+  @ApiFiles('files')
+  async uploadAssets(@UploadedFiles(ParseFile) files: Array<Express.Multer.File>) {
     try {
-      const result = await this.fileAssetService.uploadFiles(files, 'nestjs-prisma-starter')
+      const result = await this.fileAssetService.uploadFiles(files, `${snake(APP_NAME)}/public`)
       return {
         data: result,
         statusCode: HttpStatus.CREATED,
