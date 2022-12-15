@@ -1,1 +1,1 @@
-export const APP_NAME = 'NestJS Prisma Starter';
+export const APP_NAME = 'NestJS Prisma Starter'

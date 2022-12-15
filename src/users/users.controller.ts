@@ -100,6 +100,6 @@ export class UsersController {
   }
 
   private getSafeUser(user: User): User {
-    return { ...user, password: ''}
+    return { ...user, password: '' }
   }
 }

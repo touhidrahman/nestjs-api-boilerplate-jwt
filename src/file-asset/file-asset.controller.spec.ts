@@ -1,18 +1,18 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { FileAssetController } from './file-asset.controller';
+import { Test, TestingModule } from '@nestjs/testing'
+import { FileAssetController } from './file-asset.controller'
 
 describe('FileAssetController', () => {
-  let controller: FileAssetController;
+  let controller: FileAssetController
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [FileAssetController],
-    }).compile();
+    }).compile()
 
-    controller = module.get<FileAssetController>(FileAssetController);
-  });
+    controller = module.get<FileAssetController>(FileAssetController)
+  })
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
-});
+    expect(controller).toBeDefined()
+  })
+})

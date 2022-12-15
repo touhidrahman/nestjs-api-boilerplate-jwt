@@ -11,8 +11,19 @@ export class FileAssetService {
     return this.s3Manager.listBucketContents()
   }
 
+  async count(): Promise<number> {
+    return this.prisma.fileAsset.count()
+  }
+
   async getOne(id: string) {
     return this.prisma.fileAsset.findFirst({ where: { id } })
+  }
+
+  async findAll(page: number, size: number): Promise<FileAsset[]> {
+    return this.prisma.fileAsset.findMany({
+      take: size,
+      skip: (page - 1) * size,
+    })
   }
 
   async uploadFile(file: Express.Multer.File, folder: string): Promise<FileAsset> {
@@ -32,9 +43,9 @@ export class FileAssetService {
 
   async uploadFiles(files: Array<Express.Multer.File>, folder: string): Promise<FileAsset[]> {
     const results: FileAsset[] = []
-    for await(const file of files) {
-        const item = await this.uploadFile(file, folder)
-        results.push(item)
+    for await (const file of files) {
+      const item = await this.uploadFile(file, folder)
+      results.push(item)
     }
 
     return results

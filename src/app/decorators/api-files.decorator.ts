@@ -1,7 +1,7 @@
-import { applyDecorators, UseInterceptors } from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { applyDecorators, UseInterceptors } from '@nestjs/common'
+import { FilesInterceptor } from '@nestjs/platform-express'
+import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface'
+import { ApiBody, ApiConsumes } from '@nestjs/swagger'
 
 export function ApiFiles(
   fieldName: string = 'files',
@@ -27,5 +27,5 @@ export function ApiFiles(
         },
       },
     }),
-  );
+  )
 }

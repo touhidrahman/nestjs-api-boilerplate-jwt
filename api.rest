@@ -47,7 +47,11 @@ Authorization: Bearer {{accessToken}}
 
 ############################ FILE ASSET ############################
 
-GET {{host}}/file-assets
+GET {{host}}/file-assets?page=1&size=3
+
+###
+
+GET {{host}}/file-assets/bucket-content
 
 ###
 

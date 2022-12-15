@@ -1,4 +1,17 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, UploadedFile, UploadedFiles } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+  UploadedFile,
+  UploadedFiles,
+} from '@nestjs/common'
 import { ApiConsumes, ApiTags } from '@nestjs/swagger'
 import { FileAsset } from '@prisma/client'
 import { ApiFile, ApiImageFile } from 'src/app/decorators/api-file.decorator'
@@ -14,9 +27,28 @@ import { snake } from 'radash'
 export class FileAssetController {
   constructor(private fileAssetService: FileAssetService) {}
 
-  @Get()
+  @Get('bucket-contents')
   async listBucketContents() {
     return this.fileAssetService.listAllContent()
+  }
+
+  @Get()
+  async findAll(
+    @Query('page', ParseIntPipe) page = 1,
+    @Query('size', ParseIntPipe) size = 10,
+  ): Promise<EntityResponse<FileAsset[]>> {
+    const fileAssets = await this.fileAssetService.findAll(page, size)
+    const count = await this.fileAssetService.count()
+    return {
+      data: fileAssets,
+      statusCode: HttpStatus.OK,
+      meta: {
+        total: count,
+        page,
+        size,
+        totalPages: Math.ceil(count / size),
+      },
+    }
   }
 
   @Post('avatar')

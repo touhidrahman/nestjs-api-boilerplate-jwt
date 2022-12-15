@@ -15,8 +15,8 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api')
 
-  const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
+  const { httpAdapter } = app.get(HttpAdapterHost)
+  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter))
 
   configureSwaggerDocs(app, configService)
 

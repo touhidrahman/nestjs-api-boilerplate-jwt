@@ -8,7 +8,7 @@ import { loggingMiddleware, PrismaModule } from 'nestjs-prisma'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { dbLoggingMiddleware } from './app/middlewares/db-logging.middleware'
+import { prismaRedisMiddleware } from './app/middlewares/prisma-redis.middleware'
 import { ChangePasswordModule } from './change-password/change-password.module'
 import { FileAssetModule } from './file-asset/file-asset.module'
 import { ForgotPasswordModule } from './forgot-password/forgot-password.module'
@@ -37,10 +37,15 @@ import { UtilsModule } from './utils/utils.module'
       isGlobal: true,
       useFactory: () => ({
         prismaOptions: {
-          log: ['warn', 'error', 'info', 'query'],
+          log: [
+            { emit: 'stdout', level: 'query' },
+            { emit: 'stdout', level: 'info' },
+            { emit: 'stdout', level: 'warn' },
+            { emit: 'stdout', level: 'error' },
+          ],
         },
         prismaServiceOptions: {
-          middlewares: [loggingMiddleware()],
+          middlewares: [loggingMiddleware(), prismaRedisMiddleware()],
         },
         explicitConnect: false,
       }),
